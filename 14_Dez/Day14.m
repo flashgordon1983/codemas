@@ -46,8 +46,7 @@ size_Y = max(max(data(:,2:2:60)));
 size_X = max(max(data(:,1:2:59)));
 
 
-chamber = nan(size_Y+1,size_X+2);
-chamber(size_Y+2,:) = 99;
+chamber = nan(size_Y+3,size_X+200);
 
 
 
@@ -62,8 +61,8 @@ for i = 1:sum(~isnan(data(:,1)),1)
 
 end
 
-
-
+chamber_2 = chamber;
+chamber(size_Y+2,:) = 99;
 
 
 end_var = 0;
@@ -95,9 +94,38 @@ end
 
 answer1 = sum(sum(chamber == 2));
 
+chamber = chamber_2;
+chamber(size_Y+3,:) = 1;
+
+end_var = 0;
+
+while end_var == 0
+sand_indx = [1 500];
+next = 0;
+while next == 0
+
+  if isnan(chamber(sand_indx(1)+1,sand_indx(2)))
+    sand_indx(1) = sand_indx(1)+1;
+  elseif isnan(chamber(sand_indx(1)+1,sand_indx(2)-1))
+     sand_indx(1) = sand_indx(1)+1;
+     sand_indx(2) = sand_indx(2)-1;
+  elseif isnan(chamber(sand_indx(1)+1,sand_indx(2)+1))
+     sand_indx(1) = sand_indx(1)+1;
+     sand_indx(2) = sand_indx(2)+1;
+  elseif chamber(sand_indx(1)+1,sand_indx(2)) == 2 && sand_indx(1) == 1
+     chamber(sand_indx(1),sand_indx(2)) = 2;
+     end_var = 1;
+     break
+  else
+     chamber(sand_indx(1),sand_indx(2)) = 2;
+     next = 1;
+##     break
+  end
+end
+end
 
 
-
+answer2 = sum(sum(chamber == 2));
 
 
 
